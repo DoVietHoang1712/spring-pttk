@@ -8,4 +8,5 @@ import java.util.List;
 public interface XeService {
     List<Xe> getAll();
     Xe getById(Long id);
+
 }
