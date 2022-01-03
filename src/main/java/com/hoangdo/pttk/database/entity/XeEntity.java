@@ -28,6 +28,14 @@ public class XeEntity extends Xe {
     public String getMoTa() {return super.getMoTa();};
 
     @Override
+    @Column(name = "price_per_hour")
+    public Double getPricePerHour() {return super.getPricePerHour();}
+
+    @Override
+    @Column(name = "price_per_day")
+    public Double getPricePerDay() {return super.getPricePerDay();}
+
+    @Override
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "xe")
     public List<XeImageEntity> getImages() {return (List<XeImageEntity>) super.getImages();}
 }

@@ -16,5 +16,7 @@ public class Xe {
     private String trangThai;
     private String moTa;
     private Long idCuaHang;
+    private Double pricePerHour;
+    private Double pricePerDay;
     private List<? extends XeImage> images = new ArrayList<>();
 }
