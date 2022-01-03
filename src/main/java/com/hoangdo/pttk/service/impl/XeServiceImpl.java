@@ -64,7 +64,9 @@ public class XeServiceImpl implements XeService {
         user.setSoDuTaiKhoan(user.getSoDuTaiKhoan() - price);
         List<LichSuThueXe> list = lichSuThueXeRepository.findAllByIdXe(xe.getId());
         for (LichSuThueXe lichSuThueXe : list) {
-            if (req.getRentDate().after(lichSuThueXe.getNgayThueXe()) && req.getReturnDate().before(lichSuThueXe.getNgayTraXe())) {
+            if ((req.getRentDate().after(lichSuThueXe.getNgayThueXe()) && req.getRentDate().before(lichSuThueXe.getNgayTraXe()))
+            || (req.getReturnDate().after(lichSuThueXe.getNgayTraXe()) && req.getReturnDate().before(lichSuThueXe.getNgayTraXe()))
+            ) {
                 throw new Exception("Bike has rent");
             }
         }
