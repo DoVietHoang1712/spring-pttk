@@ -1,5 +1,6 @@
 package com.hoangdo.pttk.service.impl;
 
+import com.hoangdo.pttk.api.dto.LichSuThueXe;
 import com.hoangdo.pttk.api.dto.User;
 import com.hoangdo.pttk.api.dto.Xe;
 import com.hoangdo.pttk.api.dto.request.RentBikeDto;
@@ -61,18 +62,24 @@ public class XeServiceImpl implements XeService {
         LichSuGiaoDichEntity lichSuGiaoDichEntity = new LichSuGiaoDichEntity();
         LichSuThueXeEntity lichSuThueXeEntity = new LichSuThueXeEntity();
         user.setSoDuTaiKhoan(user.getSoDuTaiKhoan() - price);
+        List<LichSuThueXe> list = lichSuThueXeRepository.findAllByIdXe(xe.getId());
+        for (LichSuThueXe lichSuThueXe : list) {
+            if (req.getRentDate().after(lichSuThueXe.getNgayThueXe()) && req.getReturnDate().before(lichSuThueXe.getNgayTraXe())) {
+                throw new Exception("Bike has rent");
+            }
+        }
         userRepository.save(user);
         xe.setTrangThai("rented");
         xeRepository.save(xe);
         lichSuThueXeEntity.setIdKhachHang(userId);
         lichSuThueXeEntity.setIdXe(xe.getId());
         lichSuThueXeEntity.setNgayThueXe(req.getRentDate());
+        lichSuThueXeEntity.setNgayTraXe(req.getReturnDate());
         lichSuThueXeEntity.setThoiGian(req.getNumsOfRent());
         lichSuGiaoDichEntity.setIdKhachHang(userId);
         lichSuGiaoDichEntity.setIdPromotion(req.getPromotionId());
         lichSuGiaoDichEntity.setSoTien(price);
         lichSuThueXeEntity.setLichSuGiaoDich(lichSuGiaoDichEntity);
         lichSuThueXeRepository.save(lichSuThueXeEntity);
-
     }
 }

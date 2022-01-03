@@ -15,4 +15,5 @@ public class RentBikeDto {
     private Long xeId;
     private Long promotionId;
     private Date rentDate;
+    private Date returnDate;
 }
