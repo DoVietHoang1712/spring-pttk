@@ -71,7 +71,4 @@ public class UserEntity extends User {
     @Override
     public String getHang() {return super.getHang();}
 
-    @Column(name = "doi_tuong")
-    @Override
-    public Long getDoiTuong() {return super.getDoiTuong();}
 }

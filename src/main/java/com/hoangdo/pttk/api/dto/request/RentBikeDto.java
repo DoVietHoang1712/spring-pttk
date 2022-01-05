@@ -13,6 +13,7 @@ public class RentBikeDto {
     private String type;
     private Integer numsOfRent;
     private Long xeId;
+    private Long userId;
     private Long promotionId;
     private Date rentDate;
     private Date returnDate;

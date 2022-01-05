@@ -7,18 +7,15 @@ import com.hoangdo.pttk.database.repository.UserRepository;
 import com.hoangdo.pttk.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -26,7 +23,6 @@ public class UserServiceImpl implements UserService {
     public void save(UserRQ userRQ) {
         UserEntity user = new UserEntity();
         user.setUsername(userRQ.getUsername());
-        user.setPassword(passwordEncoder.encode(userRQ.getPassword()));
         userRepository.save(user);
     }
 }

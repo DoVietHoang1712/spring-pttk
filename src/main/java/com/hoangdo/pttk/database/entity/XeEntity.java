@@ -16,15 +16,15 @@ public class XeEntity extends Xe {
     public Long getId(){return super.getId();}
 
     @Override
-    @Column(name = "loaiXe")
+    @Column(name = "loai_xe")
     public String getLoaiXe() {return super.getLoaiXe();};
 
     @Override
-    @Column(name = "trangThai")
+    @Column(name = "trang_thai")
     public String getTrangThai() {return super.getTrangThai();};
 
     @Override
-    @Column(name = "moTa")
+    @Column(name = "mo_ta")
     public String getMoTa() {return super.getMoTa();};
 
     @Override

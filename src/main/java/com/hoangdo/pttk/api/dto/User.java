@@ -26,5 +26,4 @@ public class User {
     private String nganHang;
     private Double soDuTaiKhoan;
     private String hang;
-    private Long doiTuong;
 }

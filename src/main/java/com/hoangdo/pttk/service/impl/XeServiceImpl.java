@@ -4,14 +4,8 @@ import com.hoangdo.pttk.api.dto.LichSuThueXe;
 import com.hoangdo.pttk.api.dto.User;
 import com.hoangdo.pttk.api.dto.Xe;
 import com.hoangdo.pttk.api.dto.request.RentBikeDto;
-import com.hoangdo.pttk.database.entity.LichSuGiaoDichEntity;
-import com.hoangdo.pttk.database.entity.LichSuThueXeEntity;
-import com.hoangdo.pttk.database.entity.UserEntity;
-import com.hoangdo.pttk.database.entity.XeEntity;
-import com.hoangdo.pttk.database.repository.LichSuGiaoDichRepository;
-import com.hoangdo.pttk.database.repository.LichSuThueXeRepository;
-import com.hoangdo.pttk.database.repository.UserRepository;
-import com.hoangdo.pttk.database.repository.XeRepository;
+import com.hoangdo.pttk.database.entity.*;
+import com.hoangdo.pttk.database.repository.*;
 import com.hoangdo.pttk.service.XeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +21,16 @@ public class XeServiceImpl implements XeService {
     private final LichSuGiaoDichRepository lichSuGiaoDichRepository;
     private final LichSuThueXeRepository lichSuThueXeRepository;
     private final UserRepository userRepository;
+    private final PromotionRepository promotionRepository;
     @Autowired
-    public XeServiceImpl(XeRepository xeRepository, LichSuGiaoDichRepository lichSuGiaoDichRepository, LichSuThueXeRepository lichSuThueXeRepository, UserRepository userRepository) {
+    public XeServiceImpl(XeRepository xeRepository, LichSuGiaoDichRepository lichSuGiaoDichRepository,
+                         LichSuThueXeRepository lichSuThueXeRepository, UserRepository userRepository,
+                         PromotionRepository promotionRepository) {
         this.xeRepository = xeRepository;
         this.lichSuGiaoDichRepository = lichSuGiaoDichRepository;
         this.lichSuThueXeRepository = lichSuThueXeRepository;
         this.userRepository = userRepository;
+        this.promotionRepository = promotionRepository;
     }
     @Override
     public List<Xe> getAll() {
@@ -55,6 +53,14 @@ public class XeServiceImpl implements XeService {
             price = req.getNumsOfRent() * xe.getPricePerDay();
         }
 
+        if (req.getPromotionId() != null) {
+            PromotionEntity promotionEntity = promotionRepository.getById(req.getPromotionId());
+            Double discountMax = promotionEntity.getDiscountPercent() / 100 * price + price;
+            if (discountMax > promotionEntity.getDiscountMax()) {
+                price -= promotionEntity.getDiscountMax();
+            } else price -= discountMax;
+        }
+
         if (price > user.getSoDuTaiKhoan()) {
             throw new Exception("Do not enough money");
         }
@@ -70,6 +76,10 @@ public class XeServiceImpl implements XeService {
                 throw new Exception("Bike has rent");
             }
         }
+
+        if (xe.getTrangThai().equals("rented")) {
+            throw new Exception("Bike has rented");
+        }
         userRepository.save(user);
         xe.setTrangThai("rented");
         xeRepository.save(xe);
@@ -77,10 +87,12 @@ public class XeServiceImpl implements XeService {
         lichSuThueXeEntity.setIdXe(xe.getId());
         lichSuThueXeEntity.setNgayThueXe(req.getRentDate());
         lichSuThueXeEntity.setNgayTraXe(req.getReturnDate());
+        lichSuThueXeEntity.setType(req.getType());
         lichSuThueXeEntity.setThoiGian(req.getNumsOfRent());
         lichSuGiaoDichEntity.setIdKhachHang(userId);
         lichSuGiaoDichEntity.setIdPromotion(req.getPromotionId());
         lichSuGiaoDichEntity.setSoTien(price);
+        lichSuGiaoDichRepository.save(lichSuGiaoDichEntity);
         lichSuThueXeEntity.setLichSuGiaoDich(lichSuGiaoDichEntity);
         lichSuThueXeRepository.save(lichSuThueXeEntity);
     }

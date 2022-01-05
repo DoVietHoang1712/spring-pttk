@@ -36,6 +36,10 @@ public class LichSuThueXeEntity extends LichSuThueXe {
     public Long getIdKhachHang() {return super.getIdKhachHang();}
 
     @Override
+    @Column(name = "type")
+    public String getType() {return super.getType();}
+
+    @Override
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_lich_su_giao_dich", referencedColumnName = "id")
     public LichSuGiaoDichEntity getLichSuGiaoDich() {return (LichSuGiaoDichEntity) super.getLichSuGiaoDich();}

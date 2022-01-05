@@ -17,4 +17,5 @@ public class LichSuThueXe {
     private LichSuGiaoDich lichSuGiaoDich;
     private Long idXe;
     private Long idKhachHang;
+    private String type;
 }
